@@ -3,6 +3,7 @@ import java.util.*;
 
 import org.springframework.stereotype.Service;
 
+import com.sist.web.dto.AttractionDTO;
 import com.sist.web.dto.CommonsDTO;
 import com.sist.web.repository.*;
 
@@ -34,4 +35,21 @@ public class TravelServiceImpl implements TravelService{
 		// TODO Auto-generated method stub
 		return sRepo.seoulMainListData();
 	}
+	@Override
+	public List<AttractionDTO> jejuAttractionData(int start) {
+		// TODO Auto-generated method stub
+		List<AttractionDTO> list = jRepo.jejuAttractionData(start);
+		return list;
+	}
+	@Override
+	public int jejuDetailTotalPage(int contenttype) {
+		// TODO Auto-generated method stub
+		return jRepo.jejuDetailTotalPage(contenttype);
+	}
+	@Override
+	public AttractionDTO jejuAttractionDetail(int contentid) {
+		// TODO Auto-generated method stub
+		return jRepo.jejuAttractionDetail(contentid);
+	}
+	
 }

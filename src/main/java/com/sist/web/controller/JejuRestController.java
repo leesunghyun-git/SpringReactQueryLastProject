@@ -1,0 +1,70 @@
+package com.sist.web.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sist.web.dto.AttractionDTO;
+import com.sist.web.dto.CommentDTO;
+import com.sist.web.service.CommentService;
+import com.sist.web.service.TravelService;
+
+import lombok.RequiredArgsConstructor;
+@RestController
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+public class JejuRestController {
+	private final TravelService tService;
+	private final CommentService cService;
+	@GetMapping("/jeju/attraction/{page}")
+	public ResponseEntity<Map> jeju_attraction(@PathVariable("page")int page)
+	{
+		Map map = new HashMap();
+		try {
+			List<AttractionDTO> list = tService.jejuAttractionData((page-1)*12);
+			int totalPage=tService.jejuDetailTotalPage(12);
+			int startPage=((page-1)/10*10)+1;
+			int endPage=((page-1)/10*10)+10;
+			if(endPage>totalPage)
+				endPage=totalPage;
+			map.put("list", list);
+			map.put("startPage", startPage);
+			map.put("endPage", endPage);
+			map.put("totalPage", totalPage);
+			
+		}catch(Exception ex)
+		{
+			ex.printStackTrace();
+			
+		return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(map,HttpStatus.OK);
+	}
+	@GetMapping("/jeju/detail_react/{contentid}")
+	public ResponseEntity<Map> jeju_detail(@PathVariable("contentid") int contentid)
+	{
+		Map map=new HashMap();
+		try
+		{
+			AttractionDTO dto=tService.jejuAttractionDetail(contentid);
+			List<CommentDTO> list=cService.commentListData(contentid);
+			map.put("dto", dto);
+			map.put("comments", list);
+			// 댓글 첨부 
+		}catch(Exception ex)
+    	{
+    		ex.printStackTrace();
+    		return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+    	}
+		return new ResponseEntity<>(map,HttpStatus.OK);
+	}
+}	
+
+

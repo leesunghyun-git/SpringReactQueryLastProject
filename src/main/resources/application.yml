@@ -16,6 +16,13 @@ spring:
         show_sql: true
         format_sql: true
         user_sql_comments: true
+  ai:
+    google:
+     genai: 
+      api-key: 
+      chat:
+        options:
+          model: gemini-2.5-flash-lite
 
 logging:
   level:
